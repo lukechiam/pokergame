@@ -9,9 +9,12 @@
 #### Steps:
 1. Clone project from GitHub
    ```
-
+   git clone git@github.com:lukechiam/pokergame.git
    ```
-
+2. Go to project's root directory
+   ```
+   cd pokergame
+   ```
 2. On the command line, run
    ```
    mvn clean install
