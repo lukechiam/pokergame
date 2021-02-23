@@ -10,12 +10,16 @@ public class ThreeCardHand
 {
     private ThreeCardHandType handType;
 
-    public ThreeCardHand(final String playerId, List<Card> cards)
+    public ThreeCardHand(final String playerId, final List<Card> cards)
         throws IllegalArgumentException
     {
-        if (cards == null || cards.isEmpty())
+        if (playerId == null || playerId.isEmpty())
         {
-            throw new IllegalArgumentException("A playing hand must contain cards");
+            throw new IllegalArgumentException("A player must have an identifier");
+        }
+        if (cards == null || cards.size() != 3)
+        {
+            throw new IllegalArgumentException("A playing hand must contain 3 cards, dah!");
         }
 
         setPlayerId(playerId);
@@ -28,11 +32,6 @@ public class ThreeCardHand
         this(playerId, Arrays.asList(cards));
     }
 
-    public int getRankValue()
-    {
-        return handType.getRankValue();
-    }
-
     public Card getHighCard()
         throws IllegalArgumentException
     {
@@ -41,7 +40,7 @@ public class ThreeCardHand
         case STRAIGHT:
         case FLUSH:
         case STRAIGHT_FLUSH:
-            return getCards().stream().max(Comparator.comparing(Card::getValue)).get();
+            return getCards().stream().max(Comparator.comparing(Card::getFaceValue)).get();
         case ONE_PAIR:
             return getMatchingCards(2).get(0);
         case THREE_OF_A_KIND:
@@ -55,14 +54,14 @@ public class ThreeCardHand
     {
         if (anotherHand instanceof ThreeCardHand)
         {
-            int result = this.getRankValue() - ((ThreeCardHand) anotherHand).getRankValue();
+            int result = handType.compareTo(((ThreeCardHand) anotherHand).handType);
             if (result == 0)
             {
-                return this.getHighCard().getValue() - ((ThreeCardHand) anotherHand).getHighCard().getValue();
+                return this.getHighCard().getFaceValue().compareTo(((ThreeCardHand) anotherHand).getHighCard().getFaceValue());
             }
             return result;
         }
-        return -1;
+        throw new IllegalArgumentException("You are playing with a mixed deck of cards");
     }
 
     protected ThreeCardHandType ascertainHandType()

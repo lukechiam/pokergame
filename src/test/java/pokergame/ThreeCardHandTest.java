@@ -5,22 +5,42 @@ import org.junit.Test;
 
 public class ThreeCardHandTest
 {
-    @Test
-    public void givenMatchThresholdOf2ExpectResultCountToMatch()
+    // test constructor
+
+    @Test(expected = IllegalArgumentException.class)
+    public void givenOneCardExpectException()
     {
-        final Hand pokerHand = new ThreeCardHand("ANY", new Card("9s"), new Card("9s"), new Card("Ks"), new Card("Kh"), new Card("Kc"));
-        Assert.assertEquals(2, pokerHand.getMatchingCards(2).size());
-        Assert.assertEquals(3, pokerHand.getMatchingCards(3).size());
+        final Hand pokerHand = new ThreeCardHand("ANY", new Card("5s"));
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void givenMatchThresholdOf1ExpectException()
+    public void givenTwoCardsExpectException()
     {
-        final Hand pokerHand = new ThreeCardHand("ANY", new Card("9s"));
-        pokerHand.getMatchingCards(1);
+        final Hand pokerHand = new ThreeCardHand("ANY", new Card("5s"), new Card("Ah"));
     }
 
-    // Test is StraightFlush()
+    @Test(expected = IllegalArgumentException.class)
+    public void givenFourCardsExpectException()
+    {
+        final Hand pokerHand = new ThreeCardHand("ANY", new Card("5s"), new Card("Ah"), new Card("3d"), new Card("Jh"));
+    }
+
+    @Test
+    public void givenThreeCardExpectToBeOk()
+    {
+        new ThreeCardHand("ANY", new Card("5s"), new Card("5d"), new Card("Tc"));
+    }
+
+    // Test getMatchingCards()
+
+    @Test
+    public void givenMatchThresholdOf2ExpectResultCountToMatch()
+    {
+        final Hand pokerHand = new ThreeCardHand("ANY", new Card("9s"), new Card("9s"), new Card("Ks"));
+        Assert.assertEquals(2, pokerHand.getMatchingCards(2).size());
+    }
+
+    // Test isStraightFlush()
 
     @Test
     public void givenNonConsecutiveCardsWithSameSuitExpectNoStraightFlushes()
@@ -54,14 +74,6 @@ public class ThreeCardHandTest
     }
 
     @Test
-    public void given2CardsWithSameSuitExpectFlush()
-    {
-        final Hand pokerHand = new ThreeCardHand("ANY", new Card("Jd"), new Card("Ad"));
-        Assert.assertTrue(pokerHand.isFlush());
-
-    }
-
-    @Test
     public void given3CardsWithSameSuitExpectFlush()
     {
         final Hand pokerHand = new ThreeCardHand("ANY", new Card("2c"), new Card("4c"), new Card("5c"));
@@ -76,13 +88,6 @@ public class ThreeCardHandTest
     {
         final Hand pokerHand = new ThreeCardHand("ANY", new Card("2c"), new Card("4h"), new Card("5c"));
         Assert.assertFalse(pokerHand.isStraight());
-    }
-
-    @Test
-    public void given2ConsecutiveCardsExpectStraight()
-    {
-        final Hand pokerHand = new ThreeCardHand("ANY", new Card("9s"), new Card("Tc"));
-        Assert.assertTrue(pokerHand.isStraight());
     }
 
     @Test
@@ -102,13 +107,6 @@ public class ThreeCardHandTest
     // Test hasMatchingCard() which also test isPair(), isThreeOfAKind() and isFourOfAKind()
 
     @Test
-    public void given1CardExpectNoPairs()
-    {
-        final Hand pokerHand = new ThreeCardHand("ANY", new Card("5s"));
-        Assert.assertFalse(pokerHand.hasMatchingCard(2));
-    }
-
-    @Test
     public void givenNoEqualValueCardsExpectNotPair()
     {
         final Hand pokerHand = new ThreeCardHand("ANY", new Card("4s"), new Card("9h"), new Card("8c"));
@@ -119,13 +117,6 @@ public class ThreeCardHandTest
     public void given3EqualValueCardsExpectNotPair()
     {
         final Hand pokerHand = new ThreeCardHand("ANY", new Card("4s"), new Card("4h"), new Card("4c"));
-        Assert.assertFalse(pokerHand.hasMatchingCard(2));
-    }
-
-    @Test
-    public void given4EqualValueCardsExpectNotPair()
-    {
-        final Hand pokerHand = new ThreeCardHand("ANY", new Card("4s"), new Card("4h"), new Card("4c"), new Card("4d"));
         Assert.assertFalse(pokerHand.hasMatchingCard(2));
     }
 

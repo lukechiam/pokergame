@@ -32,7 +32,7 @@ public class ThreeCardPoker
         // Find card value of max hand
         ThreeCardHand oneOfMaxHand = Collections.max(playingHands);
         return playingHands.stream()
-            .filter(entry -> entry.getHighCard().getValue() == oneOfMaxHand.getHighCard().getValue())
+            .filter(entry -> entry.getHighCard().getFaceValue() == oneOfMaxHand.getHighCard().getFaceValue())
             .collect(Collectors.toList());
     }
 
